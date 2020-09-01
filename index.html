@@ -1,0 +1,103 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>React</title>
+    <style>
+        #root{
+            text-align: center;            
+            margin: 10px 15%;        
+        }
+        #container{
+            border: 2px solid orange;
+            width: 70%
+        }
+        ul{
+            list-style: none;
+        }
+        .heading{
+            font-size: 30px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+        .button{
+            margin: 5px;
+            padding: 5px;
+            font-weight: bold;
+        }
+        .outputli{
+            text-decoration: line-through;
+            color: grey;
+            text-decoration-color:black ;
+        }
+      
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+    
+    let temp=0;
+
+    function Output(){
+
+    const [Todo, setTodo] = React.useState([{value:"Sample Task", id:temp++, status:true}])
+    const [userInput, setuserInput] = React.useState("")
+
+
+        function addtask(){
+            setTodo(data => data.concat([{value:userInput, id:temp++, status:true}]))
+        }
+
+        function delTask(index){
+            setTodo((data) => data.filter((value,ind) => value.id!=index) )
+            console.log("Deleted : ",index)
+        }
+
+        function compTask(index){
+                setTodo(data => data.map((val,ind)=>{
+                    if(val.id == index)
+                        return ({value: val.value , status: !val.status , id:val.id})
+                    else 
+                        return(val)
+                }))
+        }
+        return (            
+            <div id="container">
+                <div className="heading" > To Do List </div>
+                <div>
+                    <input type="text" value={userInput} onChange={event=>setuserInput(event.target.value)} />
+                    <button className="button" onClick={addtask}>Add Task</button>
+                </div>
+                <div>
+                    <ul>
+                        {Todo.filter(todo => todo.status == true).map((todo,index) => (
+                            <li key={todo.id}> {todo.value}
+                            <button className="button" onClick={() => delTask(todo.id)}>Delete</button>
+                            <button className="button" onClick={() => compTask(todo.id)}>Complete</button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div>
+                    <div className="heading">Completed Tasks</div>
+                    <ul>
+                        {Todo.filter(todo => todo.status == false).map((todo,index) => (
+                            <li className="outputli" key={todo.id}>{todo.value}
+                            <button className="button" onClick={() => delTask(todo.id)}>Delete</button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+        )
+    }     
+    
+    ReactDOM.render(<Output />,document.getElementById("root"));
+
+    </script>
+    
+</body>
+</html>
